@@ -1,12 +1,10 @@
 import pika
 import mysql.connector
 import datetime
-
 credentials = pika.PlainCredentials('admin', 'root')
 connection = pika.BlockingConnection(pika.ConnectionParameters('10.0.0.121',5672,'/',credentials))
 channel = connection.channel()
 channel.queue_declare(queue='hello')
-
 def callback(ch, method, properties, body):
     global cursor
     global sqlconnection
@@ -20,7 +18,6 @@ def callback(ch, method, properties, body):
     query=f"UPDATE customers SET `process_id`='{process_id}' , `process_time`= '{time_now}' where id={data['id']}"
     cursor.execute(query)
     sqlconnection.commit()
-#------------- Function Definition Ended -------------------------    
 try:
     sqlconnection = mysql.connector.connect(host='10.0.1.98',database='campaign',user='root',password='awais')
     cursor = sqlconnection.cursor()
